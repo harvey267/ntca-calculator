@@ -131,6 +131,22 @@ with st.sidebar.expander("💼 Future 401(k) & Investments"):
         amt = st.number_input(f"401(k) Withdrawal for {year}", min_value=0, value=0, key=f"k401_{year}")
         future_401k[year] = amt
 
+# === S&P 500 Comparison Inputs ===
+with st.sidebar.expander("📈 S&P 500 Comparison"):
+    contribution_rate_pct = st.number_input(
+        "Employee Contribution Rate (%)",
+        min_value=0.0, max_value=20.0, value=4.0, step=0.5, format="%.1f",
+        help="Your annual contribution to the pension plan as a % of salary. "
+             "Common NTCA values: 3% or 4%. Check your plan documents."
+    )
+    contribution_rate = contribution_rate_pct / 100.0
+    sp500_return_pct = st.slider(
+        "Assumed Annual Return (%)",
+        min_value=4.0, max_value=14.0, value=10.0, step=0.5,
+        help="S&P 500 long-run nominal average: ~10%. Use 7% for inflation-adjusted real returns."
+    )
+    sp500_return = sp500_return_pct / 100.0
+
 # === Debug and Disclaimer ===
 st.sidebar.markdown("---")
 show_debug = st.sidebar.checkbox("Show Debug Panel", value=True)
@@ -406,4 +422,73 @@ with st.expander("ℹ️ How Social Security Is Calculated"):
 
     These adjustments reflect early retirement reductions and delayed retirement credits.
     """)
+
+# ============================================
+# 📊 SECTION 10: S&P 500 Comparison
+# ============================================
+
+st.header("📊 Pension vs. S&P 500 Investment Comparison")
+st.markdown(
+    f"What if you invested your **{contribution_rate_pct:.1f}% annual contribution** in the S&P 500 "
+    f"instead of the pension? Modeled over **{years:.2f} years** at **{sp500_return_pct:.1f}% annual return**."
+)
+
+# The pension lump sum scales linearly with salary (same PV factor, same years, same benefit rate)
+# so we can derive lump sum for any salary tier from the current simulation result.
+pv_factor_per_salary_dollar = results["summary"]["Full Lump Sum"] / salary
+
+salary_tiers = [60_000, 80_000, 100_000]
+comparison_rows = []
+for tier_salary in salary_tiers:
+    annual_contribution = tier_salary * contribution_rate
+    # Future value of end-of-year contributions: FV = PMT × [(1+r)^n - 1] / r
+    n = years
+    r = sp500_return
+    if r == 0:
+        sp500_portfolio = annual_contribution * n
+    else:
+        sp500_portfolio = annual_contribution * ((1 + r) ** n - 1) / r
+
+    pension_lump = pv_factor_per_salary_dollar * tier_salary
+    pension_monthly = (benefit_rate * tier_salary * years) / 12
+    diff = sp500_portfolio - pension_lump
+
+    comparison_rows.append({
+        "Salary":                  f"${tier_salary:,}",
+        "Annual Contribution":     f"${annual_contribution:,.0f}",
+        "S&P 500 Portfolio":       f"${sp500_portfolio:,.0f}",
+        "Pension Lump Sum":        f"${pension_lump:,.0f}",
+        "Difference (S&P – Pension)": f"${diff:+,.0f}",
+        "Pension Monthly Annuity": f"${pension_monthly:,.2f}",
+    })
+
+comparison_df = pd.DataFrame(comparison_rows)
+st.dataframe(comparison_df, hide_index=True, use_container_width=True)
+
+# Year-by-year growth chart for user's actual salary
+growth_rows = []
+portfolio_value = 0.0
+annual_contribution_actual = salary * contribution_rate
+pension_lump_actual = results["summary"]["Full Lump Sum"]
+
+for yr in range(1, int(years) + 2):
+    portfolio_value = portfolio_value * (1 + sp500_return) + annual_contribution_actual
+    growth_rows.append({
+        "Year of Service": yr,
+        "S&P 500 Portfolio": round(portfolio_value, 2),
+        "Pension Lump Sum":  round(pension_lump_actual, 2),
+    })
+
+growth_df = pd.DataFrame(growth_rows)
+
+st.markdown(f"**Your salary (${salary:,.0f}) — portfolio growth vs. pension lump sum target:**")
+st.line_chart(growth_df, x="Year of Service", y=["S&P 500 Portfolio", "Pension Lump Sum"])
+
+st.info(
+    "**What this comparison doesn't capture:** The pension lump sum is funded by both your contributions "
+    "and your employer's contributions — the employer absorbs the actuarial risk. "
+    "The S&P 500 scenario models only your employee contributions with no employer match. "
+    "Market returns also vary year to year — a bad sequence of returns near retirement can significantly "
+    "reduce the final portfolio value."
+)
 
