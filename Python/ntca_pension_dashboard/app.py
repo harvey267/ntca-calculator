@@ -34,6 +34,14 @@ with st.sidebar.expander("🏛 NTCA Pension Inputs", expanded=True):
     retire_date = st.date_input("Retirement Date", date(2030, 1, 1))
     salary = st.number_input("High-5 Salary ($)", min_value=10000.00, max_value=500000.00, value=80000.00, step=0.01, format="%.2f")
     years = st.number_input("Years of Service", min_value=1.0000, max_value=50.0000, value=25.0000, step=0.0001, format="%.4f")
+    benefit_rate_pct = st.number_input(
+        "Employer Benefit Rate (%)",
+        min_value=0.5, max_value=3.0, value=1.9, step=0.1, format="%.1f",
+        help="Your employer's elected accrual rate from the NTCA Adoption Agreement. "
+             "Common values: 1.9%, 1.7%, 1.5%. Not the same for all NTCA member employers — "
+             "check your Summary Plan Description or ask your HR/benefits contact."
+    )
+    benefit_rate = benefit_rate_pct / 100.0
     assumed_growth = st.number_input("Annual Salary Growth (%)", min_value=0.000, max_value=10.000, value=0.000, step=0.001, format="%.3f")
     partial = st.slider("Partial Lump Sum (% of Full)", min_value=0, max_value=100, value=0, step=5) / 100.0
 
