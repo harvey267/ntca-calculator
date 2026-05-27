@@ -18,6 +18,7 @@ Implements the IRS three-segment interest rate model and unisex mortality table 
 | `Python/segment_rate_pipeline.py` | Downloads Treasury HQM files, extracts segment rates, predicts next month |
 | `_resources/` | IRS and NTCA public reference documents |
 | `Guide to Understanding Your NTCA Pension Lump Sum.md` | Plain-language explanation of the lump sum calculation method |
+| `BLOG.md` | Background: how this calculator was built and what we found |
 
 ---
 
