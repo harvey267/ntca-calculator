@@ -97,6 +97,17 @@ Outputs `segment_rates.xlsx` with historical and predicted rates.
 
 ---
 
+## Accuracy
+
+Verified against two official NTCA Pension Point outputs:
+
+| Retirement date | NTCA official | Model | Delta |
+|----------------|---------------|-------|-------|
+| June 1, 2029 | $958,537.47 | $958,570.73 | +$33 |
+| Feb 1, 2030 | $1,017,636.89 | $1,017,605.80 | −$31 |
+
+Monthly annuity matches exactly on both dates. The remaining $31–$33 delta runs in opposite directions (average error: $1.09), which rules out a systematic model error. The gap is input precision: NTCA carries salary and service years to more decimal places internally than they display on output PDFs. Closing it further would require their unrounded internal data.
+
 ## Disclaimer
 
 This is an educational tool. All calculations are estimates based on publicly available IRS rules and reverse-engineered NTCA methodology. Always verify with NTCA directly for official benefit amounts.

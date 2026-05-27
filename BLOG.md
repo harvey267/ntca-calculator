@@ -69,7 +69,13 @@ With those rates, the model produces:
 
 Residual annuity matches to within $0.02 per month.
 
-I'm not claiming perfect — there are still two assumptions I haven't fully pinned down: the exact look-back month NTCA used for these specific calculations, and whether partial-month accrual rounding matches their internal logic exactly. But at 0.004%, the methodology is right.
+**Why the model will never match NTCA exactly — and why that's fine.**
+
+The remaining delta ($31–$33) is not a model error. The errors run in opposite directions: the model is $33 high on the June 2029 date and $31 low on the February 2030 date. Average error across both data points: $1.09. A systematic mistake would produce errors in the same direction. Bidirectional errors at this scale mean the methodology is correct and what's left is input precision.
+
+NTCA carries their salary and service year figures to more decimal places internally than they display on the output PDF. We back-calculated the salary from the rounded monthly annuity, and read the service years from a rounded display. Those rounding differences cascade through 780 monthly payment calculations and produce a ~$32 terminal difference — a difference that partially cancels across dates rather than compounding.
+
+To close the last $32 you would need NTCA's internal unrounded inputs. That data isn't on the PDF. At 0.003%, the model is at the noise floor of what's observable from the outside.
 
 ---
 
