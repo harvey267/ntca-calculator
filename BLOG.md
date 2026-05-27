@@ -73,6 +73,50 @@ I'm not claiming perfect — there are still two assumptions I haven't fully pin
 
 ---
 
+## The buyback years — and why they change everything
+
+Many NTCA participants have prior industry experience that their co-op bought back when they joined the plan. Those bought-back years are credited toward your total NTCA service, and they show up in your official benefit calculation without any separate line item explaining them.
+
+Here's how to prove whether you have them and how many.
+
+I started at my co-op in March 2003. My NTCA Pension Point output shows 30.25 years of service as of June 2029. The math:
+
+| | Years |
+|---|---|
+| Actual co-op service (March 2003 → June 2029) | 26.21 |
+| NTCA-credited service | 30.25 |
+| Bought-back years | **4.04** |
+| Buyback covers approx. | March 1999 → March 2003 |
+
+That 4-year gap is industry experience I had before joining the plan that NTCA credited at enrollment.
+
+**Why it matters — the Rule of 85:**
+
+The NTCA plan allows early retirement without penalty when your age plus years of service equals 85 or more. The buyback years are included in that calculation.
+
+| Scenario | Age | Service | Rule of 85 |
+|---|---|---|---|
+| With buyback | 55.00 | 30.25 | 85.25 ✓ qualifies |
+| Without buyback | 55.00 | 26.21 | 81.21 ✗ does not qualify |
+
+Without those 4 bought-back years I don't qualify for the Rule of 85 at 55. I'd need to work until age + service = 85, which means roughly age 59 with 26 years — four more years of work.
+
+The calculator can prove this for your own situation. Pass your co-op start date and it shows the breakdown:
+
+```bash
+python3 Python/ntca_lump_sum_calculator.py \
+  --birth-date 1975-03-01 \
+  --retirement-date 2031-01-01 \
+  --salary 75000 \
+  --years 28.5 \
+  --benefit-rate 0.019 \
+  --coop-start-date 2002-06-01
+```
+
+If NTCA is crediting you more years than your actual co-op tenure, you have bought-back years. If the two numbers match, you don't. Either way the math is right there.
+
+---
+
 ## Can you legally do this?
 
 Yes. And it's worth being clear about why, because this is a question a lot of participants will ask when they see this project.
