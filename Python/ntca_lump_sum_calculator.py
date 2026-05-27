@@ -60,6 +60,10 @@ Finding your inputs:
     parser.add_argument("--mortality-csv",   default=DEFAULT_MORTALITY_CSV,
                         help="Path to IRS §417(e) mortality table CSV (Age, 417(e) columns). "
                              f"Default: {DEFAULT_MORTALITY_CSV}")
+    parser.add_argument("--coop-start-date", default=None,
+                        help="Date you started at your NTCA co-op (YYYY-MM-DD). "
+                             "If provided, calculates your actual service vs. NTCA-credited years "
+                             "to show how many years were bought back from prior industry experience.")
     parser.add_argument("--output",          default="ntca_lump_sum.xlsx",
                         help="Output Excel filename (default: ntca_lump_sum.xlsx)")
     return parser.parse_args()
@@ -91,6 +95,19 @@ def ntca_birth_date(birth_date):
     # NTCA snaps age to the 1st of the birth month for all calculations.
     # A participant born June 10 is treated as born June 1.
     return birth_date.replace(day=1)
+
+
+def calculate_buyback(coop_start_date, retirement_date, ntca_years):
+    """
+    Proves bought-back service years by comparing actual co-op tenure
+    against NTCA-credited years. The difference is prior industry experience
+    that the plan credited at enrollment.
+    """
+    actual_days  = (retirement_date - coop_start_date).days
+    actual_years = round(actual_days / 365.25, 4)
+    buyback_years = round(ntca_years - actual_years, 4)
+    buyback_start = coop_start_date - __import__('datetime').timedelta(days=buyback_years * 365.25)
+    return actual_years, buyback_years, buyback_start
 
 
 def calculate_exact_age(birth_date, retirement_date):
@@ -203,5 +220,29 @@ if __name__ == "__main__":
     print(f"Full lump sum:    ${lump_sum:,.2f}")
     print(f"PV factor:        {pv_factor}")
     print(f"Segment rates:    {segment_rates['seg1']:.2%} / {segment_rates['seg2']:.2%} / {segment_rates['seg3']:.2%}")
+
+    if args.coop_start_date:
+        coop_start      = datetime.strptime(args.coop_start_date, "%Y-%m-%d")
+        actual_yrs, buyback_yrs, buyback_start = calculate_buyback(
+            coop_start, retirement_date, args.years
+        )
+        rule85          = exact_age + args.years
+        rule85_no_buyback = exact_age + actual_yrs
+        print(f"\n--- Service Year Breakdown ---")
+        print(f"Co-op start date:       {coop_start.strftime('%Y-%m-%d')}")
+        print(f"Actual co-op service:   {actual_yrs:.4f} years")
+        print(f"NTCA-credited service:  {args.years:.4f} years")
+        print(f"Bought-back years:      {buyback_yrs:.4f} years")
+        print(f"Buyback from approx:    {buyback_start.strftime('%B %Y')}")
+        print(f"\n--- Rule of 85 ---")
+        print(f"Age at retirement:      {exact_age:.4f}")
+        print(f"With buyback:           {exact_age:.2f} + {args.years:.2f} = {rule85:.2f}  {'✓ QUALIFIES' if rule85 >= 85 else '✗ does not qualify'}")
+        print(f"Without buyback:        {exact_age:.2f} + {actual_yrs:.2f} = {rule85_no_buyback:.2f}  {'✓ QUALIFIES' if rule85_no_buyback >= 85 else '✗ does not qualify'}")
+        inputs["Co-op Start Date"]    = coop_start.strftime("%Y-%m-%d")
+        inputs["Actual Co-op Service"] = f"{actual_yrs:.4f} years"
+        inputs["Bought-Back Years"]   = f"{buyback_yrs:.4f} years"
+        inputs["Buyback From Approx"] = buyback_start.strftime("%B %Y")
+        inputs["Rule of 85 (with buyback)"] = f"{rule85:.2f}"
+        inputs["Rule of 85 (without buyback)"] = f"{rule85_no_buyback:.2f}"
 
     export_to_excel(inputs, df_stream, summary, args.output)
