@@ -22,3 +22,4 @@ mortality.db
 .DS_Store
 .directory
 __pycache__/
+*.db
