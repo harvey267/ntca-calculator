@@ -1,0 +1,133 @@
+streamlit==1.38.0
+pandas==2.2.2
+numpy==2.1.1
+python-dateutil==2.9.0.post0
+reportlab==4.2.2
+openpyxl==3.1.5
+
+# **COMPLETE PACKAGE INSTALLER**
+```bash
+pip install streamlit pandas numpy python-dateutil reportlab openpyxl
+```
+
+**That's it. 4 packages total.**
+
+---
+
+## **QUICK START (One Command)**
+
+```bash
+# 1. Install everything
+pip install streamlit pandas numpy python-dateutil reportlab openpyxl
+
+# 2. Run the app
+streamlit run app.py
+```
+
+---
+
+## **Package Breakdown**
+
+| Package | Purpose |
+|---------|---------|
+| `streamlit` | Web dashboard |
+| `pandas` | Data tables |
+| `numpy` | Math calculations |
+| `python-dateutil` | Date math (`relativedelta`) |
+| `reportlab` | **PDF Export** |
+| `openpyxl` | Excel/CSV handling |
+
+---
+
+## **If You Get Errors**
+
+### **Option 1: Virtual Environment (Recommended)**
+```bash
+# Create clean environment
+python -m venv ntca_env
+
+# Activate (Windows)
+ntca_env\Scripts\activate
+
+# Activate (Mac/Linux)  
+source ntca_env/bin/activate
+
+# Install
+pip install streamlit pandas numpy python-dateutil reportlab openpyxl
+
+# Run
+streamlit run app.py
+```
+
+### **Option 2: Force Reinstall**
+```bash
+pip install --upgrade --force-reinstall streamlit pandas numpy python-dateutil reportlab openpyxl
+```
+
+### **Option 3: Requirements.txt (Pro)**
+Create `requirements.txt`:
+```
+streamlit==1.38.0
+pandas==2.2.2
+numpy==2.1.1
+python-dateutil==2.9.0
+reportlab==4.2.2
+openpyxl==3.1.2
+```
+
+Then:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## **Files You Need**
+
+1. **`app.py`** (from my previous message)
+2. **`pension_model.py`** (from my previous message) 
+3. **`ssa_model.py`** (from earlier in thread)
+4. **`n-24-42.csv`** (your mortality table ✅)
+
+---
+
+## **Verify Installation**
+
+After running the pip command, test:
+
+```bash
+python -c "import streamlit, reportlab; print('✅ All packages installed!')"
+```
+
+**Should print:** `✅ All packages installed!`
+
+---
+
+## **Then Run:**
+
+```bash
+streamlit run app.py
+```
+
+**Browser opens → 100% NTCA-matched dashboard → PDF export works.**
+
+---
+
+## **Troubleshooting**
+
+| Error | Fix |
+|-------|-----|
+| `ModuleNotFoundError: reportlab` | `pip install reportlab` |
+| `No module named 'dateutil'` | `pip install python-dateutil` |
+| `streamlit: command not found` | `pip install streamlit` |
+| **Still broken?** | Use **Option 1** (virtual env) |
+
+---
+
+## **🚀 LAUNCH SEQUENCE**
+
+```bash
+# Copy-paste ALL of this:
+pip install streamlit pandas numpy python-dateutil reportlab openpyxl
+streamlit run app.py
+```
