@@ -4,7 +4,7 @@
 
 ---
 
-I've been an NTCA plan participant for over 30 years. When I started getting serious about retirement planning, I did what you're supposed to do: I went to the source. I ran numbers on the NTCA Pension Point calculator. I called and asked questions.
+I've been an NTCA plan participant for over 20 years. When I started getting serious about retirement planning, I did what you're supposed to do: I went to the source. I ran numbers on the NTCA Pension Point calculator. I called and asked questions.
 
 What I got back was a number. No methodology. No formula. No explanation of how a six-figure lump sum was derived from my salary and service years.
 
