@@ -147,8 +147,9 @@ def get_adjusted_inputs(base_salary, base_years, calc_date, last_emp_date, assum
     Applies monthly accrual and buy-out logic.
     """
 
-    # Monthly accrual from June 1, 2029
-    base_anchor_date = date(2029, 6, 1)
+    # Monthly accrual: service years increase by 1/12 per month after the user's retirement date.
+    # base_anchor_date is the retirement date passed in via calc_date when months_since_anchor = 0.
+    base_anchor_date = calc_date
     months_since_anchor = (calc_date.year - base_anchor_date.year) * 12 + (calc_date.month - base_anchor_date.month)
     fractional_accrual = round(months_since_anchor / 12.0, 4) if months_since_anchor >= 0 else 0.0
     adjusted_years = round(base_years + fractional_accrual, 4)

@@ -22,7 +22,7 @@ def convert_df(df):
 
 # === Streamlit Page Configuration ===
 st.set_page_config(page_title="NTCA Pension Dashboard", layout="wide")
-st.title("📊 Tom's Retirement Simulator")
+st.title("NTCA Pension Calculator")
 
 # ============================================
 # 🧮 SECTION 2: Sidebar Inputs
@@ -30,10 +30,10 @@ st.title("📊 Tom's Retirement Simulator")
 
 # === NTCA Pension Inputs ===
 with st.sidebar.expander("🏛 NTCA Pension Inputs", expanded=True):
-    birth_date = st.date_input("Date of Birth", date(1974, 6, 10))
-    retire_date = st.date_input("Retirement Date", date(2029, 6, 1))
-    salary = st.number_input("High-5 Salary ($)", min_value=10000.00, max_value=500000.00, value=126339.20, step=0.01, format="%.2f")
-    years = st.number_input("Years of Service", min_value=1.0000, max_value=50.0000, value=25.8333, step=0.0001, format="%.4f")
+    birth_date = st.date_input("Date of Birth", date(1970, 1, 1))
+    retire_date = st.date_input("Retirement Date", date(2030, 1, 1))
+    salary = st.number_input("High-5 Salary ($)", min_value=10000.00, max_value=500000.00, value=80000.00, step=0.01, format="%.2f")
+    years = st.number_input("Years of Service", min_value=1.0000, max_value=50.0000, value=25.0000, step=0.0001, format="%.4f")
     assumed_growth = st.number_input("Annual Salary Growth (%)", min_value=0.000, max_value=10.000, value=0.000, step=0.001, format="%.3f")
     partial = st.slider("Partial Lump Sum (% of Full)", min_value=0, max_value=100, value=0, step=5) / 100.0
 
@@ -106,7 +106,7 @@ with st.sidebar.expander("🧓 Social Security Earnings"):
 
     for year in range(start_year, end_year + 1):
         age = year - birth_date.year
-        income = income_by_year.get(year, previous_income if year == current_year else 116755 if year > current_year else 0)
+        income = income_by_year.get(year, previous_income if year >= current_year else 0)
         editable_rows.append({"Age": age, "Year": year, "Income": income})
         previous_income = income
 

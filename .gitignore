@@ -1,0 +1,23 @@
+# Personal data — never commit
+ssa_earnings.csv
+ssa_earnings.txt
+*.bak
+
+# Calculation outputs
+output/
+*.xlsx
+*.pdf
+!Python/ntca_pension_dashboard/assets/*.xlsx
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Mortality database (regenerated on run)
+mortality.db
+
+# OS
+.DS_Store
+.directory
