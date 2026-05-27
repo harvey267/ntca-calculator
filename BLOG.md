@@ -129,7 +129,7 @@ I assumed a partial lump sum election meant taking a percentage of the present v
 
 NTCA’s partial lump sum is your employee contribution balance – the money you put in over your career, with interest. It is a fixed dollar amount, not a percentage. This changes how you model the trade-off between lump sum and annuity income. I am still working through the full implications of this and will document it further as the model matures.
 
-To be clear partial lump is not somethkng i have dug deeply into at this time. This maybe a duture refinement.
+To be clear, the partial lump sum is not something I have dug deeply into at this time. This may be a future refinement.
 
 -----
 
