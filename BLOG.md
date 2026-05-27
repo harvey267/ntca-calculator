@@ -208,16 +208,6 @@ The inputs you need to know before running:
 
 ---
 
-## What's next
-
-In July 2026, a second participant — within about a year of their eligibility date — has agreed to share their official NTCA Pension Point outputs. Near-eligibility calculations are the hard test: buy-out logic, final accrual rounding, and look-back month timing all matter most when you're close. I'll run their data through the model, document the agreement or divergence, and update the tools.
-
-After that validation: I'll build an Excel version for participants who don't want to run Python, deploy the Streamlit app publicly, and write up a complete methodology document.
-
-If you're an NTCA plan participant and want to run your own numbers before then — clone the repo, fill in your inputs, and let me know what you get. The more data points we have against official NTCA outputs, the tighter this gets.
-
----
-
 *Tools and source code: [github.com/harvey267/ntca-calculator](https://github.com/harvey267/ntca-calculator)*
 
 *This is an educational tool. All calculations are estimates based on publicly available IRS rules and reverse-engineered NTCA methodology. Verify with NTCA directly for official benefit amounts.*
