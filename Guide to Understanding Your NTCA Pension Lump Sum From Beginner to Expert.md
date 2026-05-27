@@ -45,13 +45,14 @@ PPA reformed lump sum calculations to better reflect market realities, replacing
   - **Snippet from Rev. Rul. 2007-67 (rr-07-67.pdf, Page 2)**: "§ 417(e)(3)(D)(ii) provides a transition rule that phases in the use of the segment rates over five years."
 - **For NTCA**: As a CSEC plan, funding differs, but lump sums follow §417(e) segments (confirmed via web search on CSEC plans: Standard §417(e) applies to lump sums).
 
-***Tip**: PPA aimed to stabilize funding; segment rates make lump sums more market-aligned than Treasury rates.
+***Tip**: PPA aimed to stabilize funding; segment rates make lump sums more market-aligned than the pre-2008 Treasury bond (GATT) rate system.
 
 ## Section 5: How Segment Rates Work – Corporate Bonds, Calculation, and Interpretation
 Segment rates are discount rates for calculating lump sum present value, divided into three "segments" based on when benefits are paid.
 
 - **Basis on Corporate Bonds**: Derived from yields on high-quality corporate bonds (AAA to BBB ratings).
   - **Snippet from IRS Funding Segment Rates Page (https://www.irs.gov/retirement-plans/pension-plan-funding-segment-rates)**: "The segment rates are based on the averages of yields over different blocks of maturity periods from Treasury high-quality corporate bond yield curves, averaged over 24 months."
+  - **Important**: The IRS uses "Treasury" here because the U.S. Treasury Department publishes the HQM yield curve data — not because the rates are based on government treasury bonds. These are high-quality corporate bond yields (AAA to BBB). This is the distinction NTCA failed to communicate clearly.
   - For lump sums (§417(e)): Uses "spot" rates (monthly average, no 24-month smoothing post-transition).
     - **Snippet from IRS Minimum Present Value Page (https://www.irs.gov/retirement-plans/minimum-present-value-segment-rates)**: "For plan years beginning after December 31, 2007, the segment rates are computed without regard to a 24-month average."
 - **The Three Segments**:
