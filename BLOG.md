@@ -73,6 +73,24 @@ I'm not claiming perfect — there are still two assumptions I haven't fully pin
 
 ---
 
+## Can you legally do this?
+
+Yes. And it's worth being clear about why, because this is a question a lot of participants will ask when they see this project.
+
+**§417(e) is public law.** The methodology I implemented is written into the IRS code. Congress set this valuation method for defined benefit plans — it's not proprietary to NTCA. Anyone can read the statute, implement the formula, and run it against their own benefit data. That's not a workaround. That's how public law works.
+
+**The source data is government publications.** The IRS publishes the §417(e) mortality tables annually as official IRS Notices. The Treasury publishes the HQM corporate bond yield curve data publicly. I downloaded both from official government sources. There's no confidential data in this model.
+
+**I didn't touch NTCA's software.** Reverse engineering in the legal sense — decompiling proprietary code — is a separate question with a more complex answer. That's not what happened here. I looked at outputs, compared them to what the IRS specification would produce, and adjusted until they matched. That's analysis from public data, not copying.
+
+**ERISA gives you the right to understand your own benefit.** Federal law requires your plan to disclose the Summary Plan Description and, on request, the plan document. The calculation methodology is information you're entitled to. Building a tool to model that methodology — for your own planning — is well within that right.
+
+**The disclaimer covers the rest.** This tool is not NTCA's calculator. It's a model built from public law and public data. The outputs are estimates. Always verify with NTCA for official amounts.
+
+This project exists because a plan participant couldn't get a straight answer about their own retirement. That's the only reason it was built.
+
+---
+
 ## What surprised me most
 
 Two findings I didn't expect going in.
