@@ -14,7 +14,7 @@ So I reverse-engineered it.
 
 ## What they told me
 
-When I asked NTCA how the lump sum was calculated, I was told it was based on treasury bonds.
+When I asked how NTCA calculated the lump sum, I was told it was based on treasury bonds.
 
 That's not correct.
 
