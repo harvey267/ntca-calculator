@@ -88,7 +88,7 @@ Outputs `segment_rates.xlsx` with historical and predicted rates.
 
 | Field | What it is |
 |-------|-----------|
-| Birth date | Your date of birth |
+| Birth date | Your date of birth. NTCA snaps age to the 1st of your birth month for all calculations — the calculator does this automatically. |
 | Retirement date | Planned benefit commencement date |
 | High-5 salary | Average of your 5 highest compensation years in the last 10 plan years |
 | Years of service | Total years of NTCA plan participation (fractions are valid, e.g. 25.833) |

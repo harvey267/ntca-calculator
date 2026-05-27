@@ -87,8 +87,15 @@ def load_mortality_table(csv_path):
     return monthly_ages, monthly_survival
 
 
+def ntca_birth_date(birth_date):
+    # NTCA snaps age to the 1st of the birth month for all calculations.
+    # A participant born June 10 is treated as born June 1.
+    return birth_date.replace(day=1)
+
+
 def calculate_exact_age(birth_date, retirement_date):
-    delta = retirement_date - birth_date
+    snapped = ntca_birth_date(birth_date)
+    delta = retirement_date - snapped
     return round(delta.days / 365.25, 4)
 
 
