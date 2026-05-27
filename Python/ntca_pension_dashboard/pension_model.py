@@ -177,7 +177,7 @@ def simulate_retirement_window(
     Each row represents a retirement date offset by i months from the start_date.
 
     Applies:
-    - Monthly accrual logic from June 2029
+    - Monthly accrual logic from the user's selected retirement date
     - Buy-out trigger on/after Feb 1, 2030 (+1 service year)
     - IRS segment rate discounting
     - §417(e) mortality-based survival probabilities
