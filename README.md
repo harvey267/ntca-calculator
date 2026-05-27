@@ -15,7 +15,7 @@ Implements the IRS three-segment interest rate model and unisex mortality table 
 |------|-------------|
 | `Python/ntca_lump_sum_calculator.py` | CLI: lump sum present value for a single retirement date |
 | `Python/ntca_pension_dashboard/` | Streamlit dashboard: full interactive simulator with retirement window, segment rate sensitivity, and SSA income |
-| `Python/segment_rate_pipeline.py` | Downloads Treasury HQM files, extracts segment rates, predicts next month |
+| `Python/segment_rate_pipeline.py` | Downloads IRS §417(e) HQM corporate bond yield curve files, extracts segment rates, predicts next month |
 | `_resources/` | IRS and NTCA public reference documents |
 | `Guide to Understanding Your NTCA Pension Lump Sum.md` | Plain-language explanation of the lump sum calculation method |
 | `BLOG.md` | Background: how this calculator was built and what we found |
@@ -72,7 +72,7 @@ year,income
 
 ## Segment rate pipeline
 
-Downloads the latest HQM yield curve data from Treasury, extracts the three §417(e) segment rate averages, and predicts next month's rates using linear regression:
+Downloads the latest IRS §417(e) HQM (High-Quality Market) corporate bond yield curve data — hosted at treasury.gov but based on corporate bonds, not government treasury bonds — extracts the three segment rate averages, and predicts next month's rates using linear regression:
 
 ```bash
 pip install pandas scikit-learn openpyxl requests
@@ -93,7 +93,7 @@ Outputs `segment_rates.xlsx` with historical and predicted rates.
 | High-5 salary | Average of your 5 highest compensation years in the last 10 plan years |
 | Years of service | Total years of NTCA plan participation (fractions are valid, e.g. 25.833) |
 | Partial lump % | Percentage of lump sum to take (remainder stays as monthly annuity) |
-| Segment rates | IRS §417(e) rates for the applicable look-back month — see `_resources/` or pull from Treasury |
+| Segment rates | IRS §417(e) HQM corporate bond rates — not treasury bond rates. Published at treasury.gov but derived from corporate bond yields. |
 
 ---
 
