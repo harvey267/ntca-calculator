@@ -492,3 +492,118 @@ st.info(
     "reduce the final portfolio value."
 )
 
+# ============================================
+# 📊 SECTION 11: Career Trajectory Comparison
+# ============================================
+
+st.header("📈 Career Trajectory Comparison")
+st.markdown(
+    "The pension benefit is based on your **High-5 salary of your last 10 years** — not your career average. "
+    "This section models how the pension compares to a 401k when contributions and salary grow together over a career."
+)
+
+col_traj1, col_traj2, col_traj3 = st.columns(3)
+with col_traj1:
+    traj_start_salary = st.number_input(
+        "Starting Salary ($)", min_value=20000, max_value=200000, value=30000, step=5000,
+        help="Salary in year 1 of plan participation."
+    )
+with col_traj2:
+    traj_end_salary = st.number_input(
+        "Ending Salary ($)", min_value=20000, max_value=500000, value=70000, step=5000,
+        help="Salary at final year of service."
+    )
+with col_traj3:
+    traj_years = st.number_input(
+        "Years of Service", min_value=5, max_value=45, value=30, step=1,
+        help="Total plan participation years."
+    )
+
+traj_benefit_rate = st.number_input(
+    "Benefit Rate (%)", min_value=1.0, max_value=3.0, value=1.9, step=0.1,
+    format="%.1f",
+    key="traj_benefit_rate",
+    help="Employer's elected accrual rate from Adoption Agreement."
+) / 100.0
+
+traj_contrib_rate = st.number_input(
+    "Employer Contribution Rate (%)", min_value=1.0, max_value=10.0, value=4.0, step=0.5,
+    format="%.1f",
+    key="traj_contrib_rate",
+    help="The percentage of salary directed to the pension (or hypothetical 401k)."
+) / 100.0
+
+# Derive annual growth rate from start/end salary and years
+if traj_years > 1 and traj_end_salary > traj_start_salary:
+    traj_growth = (traj_end_salary / traj_start_salary) ** (1.0 / (traj_years - 1)) - 1.0
+else:
+    traj_growth = 0.0
+
+traj_salaries = [traj_start_salary * (1 + traj_growth) ** i for i in range(int(traj_years))]
+
+# High-5 of last 10 years
+traj_last10 = traj_salaries[-10:] if len(traj_salaries) >= 10 else traj_salaries
+traj_high5 = sum(sorted(traj_last10, reverse=True)[:5]) / min(5, len(traj_last10))
+traj_career_avg = sum(traj_salaries) / len(traj_salaries)
+traj_monthly_annuity = traj_benefit_rate * traj_high5 * traj_years / 12
+
+# Lump sum using PV factor from current simulation (scales with salary)
+if salary > 0 and results["summary"]["Full Lump Sum"] > 0:
+    pv_factor_traj = results["summary"]["Full Lump Sum"] / (
+        benefit_rate * salary * years / 12 * 12
+    )
+    traj_lump = traj_monthly_annuity * 12 * pv_factor_traj
+else:
+    traj_lump = 0.0
+
+# 401k balances at multiple return rates
+traj_return_scenarios = [
+    ("Conservative bonds", 0.05),
+    ("Target date fund", 0.065),
+    ("S&P 500 historical", 0.10),
+]
+
+# Salary basis comparison
+st.subheader("Salary basis: High-5 vs career average")
+salary_basis_data = {
+    "Metric": ["Career average salary", "High-5 of last 10 years", "Difference", "Monthly annuity (career avg)", "Monthly annuity (High-5)", "Monthly benefit gain"],
+    "Value": [
+        f"${traj_career_avg:,.0f}",
+        f"${traj_high5:,.0f}",
+        f"+${traj_high5 - traj_career_avg:,.0f} ({(traj_high5/traj_career_avg - 1)*100:.1f}% higher)" if traj_career_avg > 0 else "N/A",
+        f"${traj_benefit_rate * traj_career_avg * traj_years / 12:,.2f}/month",
+        f"${traj_monthly_annuity:,.2f}/month",
+        f"+${traj_monthly_annuity - traj_benefit_rate * traj_career_avg * traj_years / 12:,.2f}/month",
+    ]
+}
+st.dataframe(pd.DataFrame(salary_basis_data), hide_index=True, use_container_width=True)
+
+# Full comparison table
+st.subheader("Pension vs. 401k across return scenarios")
+traj_rows = []
+for label, ret in traj_return_scenarios:
+    k401 = sum(
+        traj_salaries[i] * traj_contrib_rate * (1 + ret) ** (int(traj_years) - 1 - i)
+        for i in range(int(traj_years))
+    )
+    swr_monthly = k401 * 0.04 / 12
+    traj_rows.append({
+        "Investment scenario":    label,
+        "Return rate":            f"{ret*100:.1f}%",
+        "401k balance":           f"${k401:,.0f}",
+        "401k monthly (4% SWR)":  f"${swr_monthly:,.0f}",
+        "Pension lump sum":       f"${traj_lump:,.0f}",
+        "Pension monthly":        f"${traj_monthly_annuity:,.0f}",
+        "Pension / 401k ratio":   f"{traj_lump / k401:.1f}x" if k401 > 0 else "N/A",
+    })
+
+st.dataframe(pd.DataFrame(traj_rows), hide_index=True, use_container_width=True)
+
+st.caption(
+    f"Salary growth rate: {traj_growth*100:.2f}% per year | "
+    f"Starting salary: ${traj_start_salary:,} | "
+    f"Final salary: ${traj_salaries[-1]:,.0f} | "
+    f"High-5: ${traj_high5:,.0f} | "
+    f"Career average: ${traj_career_avg:,.0f}"
+)
+
