@@ -31,7 +31,14 @@ st.title("NTCA Pension Calculator")
 # === NTCA Pension Inputs ===
 with st.sidebar.expander("🏛 NTCA Pension Inputs", expanded=True):
     birth_date = st.date_input("Date of Birth", date(1970, 1, 1))
-    retire_date = st.date_input("Retirement Date", date(2030, 1, 1))
+    retire_date = st.date_input(
+        "Retirement Date", date(2030, 1, 1),
+        help="Set to your intended retirement date. "
+             "If your employer has elected the Rule-of-85 Provision (optional — check your Summary Plan Description), "
+             "penalty-free early retirement applies when your age plus Rule-of-85 Service equals or exceeds 85. "
+             "With 30 credited years, the earliest qualifying age is 55. "
+             "Not all NTCA member employers have elected this provision."
+    )
     salary = st.number_input("High-5 Salary ($)", min_value=10000.00, max_value=500000.00, value=80000.00, step=0.01, format="%.2f")
     years = st.number_input("Years of Service", min_value=1.0000, max_value=50.0000, value=25.0000, step=0.0001, format="%.4f")
     benefit_rate_pct = st.number_input(
@@ -47,15 +54,22 @@ with st.sidebar.expander("🏛 NTCA Pension Inputs", expanded=True):
 
 # === IRS Segment Rates ===
 with st.sidebar.expander("📈 IRS Segment Rates"):
-    st.markdown("Enter rates as percentages (e.g., 4.50)")
+    st.markdown(
+        "Enter rates as percentages (e.g., 4.50). "
+        "Per NTCA plan document Article IV.C(3)(f), the applicable rate is the **§417(e)(3) rate "
+        "for August immediately preceding the calendar year of your retirement date** — not the "
+        "current month's rate. For a 2029 retirement, use August 2028 rates. "
+        "Look up the correct month at the "
+        "[IRS minimum present value segment rates table](https://www.irs.gov/retirement-plans/minimum-present-value-segment-rates)."
+    )
     rate_tables = {}
 
     # Define rates for 2029–2031
     for year in [2029, 2030, 2031]:
-        with st.expander(f"{year} Rates (Notice {year - 1}-xx)", expanded=(year == 2029)):
-            seg1 = st.number_input(f"{year} Seg 1", value=4.50, step=0.01, format="%.2f") / 100.0
-            seg2 = st.number_input(f"{year} Seg 2", value=4.96, step=0.01, format="%.2f") / 100.0
-            seg3 = st.number_input(f"{year} Seg 3", value=5.40, step=0.01, format="%.2f") / 100.0
+        with st.expander(f"{year} Rates — use August {year - 1} §417(e)(3) rates", expanded=(year == 2029)):
+            seg1 = st.number_input(f"{year} Seg 1 (%)", value=4.50, step=0.01, format="%.2f") / 100.0
+            seg2 = st.number_input(f"{year} Seg 2 (%)", value=4.96, step=0.01, format="%.2f") / 100.0
+            seg3 = st.number_input(f"{year} Seg 3 (%)", value=5.40, step=0.01, format="%.2f") / 100.0
             rate_tables[year] = {"seg1": seg1, "seg2": seg2, "seg3": seg3}
 
     # Extend 2032 using 2031 rates
@@ -274,7 +288,7 @@ if results:
 
     # === Feb 1st Projection (Buy-Out Trigger) ===
     with col2:
-        st.subheader("Next Feb 1st Projection")
+        st.subheader("Feb 1, 2030 Projection (Buy-Out Trigger)")
         st.metric("Retirement Date", results['feb_1_summary']['Date'].strftime("%Y-%m-%d"))
         st.metric("Full Lump Sum", f"${results['feb_1_summary']['Full Lump Sum']:,.2f}")
         st.metric("Monthly Annuity", f"${results['feb_1_summary']['Monthly Annuity']:,.2f}")
@@ -285,9 +299,30 @@ if results:
 
     with st.expander("ℹ️ How Timing Affects Lump Sum Calculations"):
         st.markdown("""
+        **Segment rates and the August lookback**
+
+        Per NTCA R&S Program Specifications Article IV.C(3)(f), the applicable interest rate is the
+        §417(e)(3) rate for **August immediately preceding the calendar year of your retirement date** —
+        not the current month. For a 2029 retirement, enter August 2028 rates in the sidebar.
+        Look these up at the [IRS minimum present value segment rates table](https://www.irs.gov/retirement-plans/minimum-present-value-segment-rates).
+
+        **The Feb 1, 2030 buy-out trigger**
+
+        A plan-specific provision (Article IV of the NTCA R&S Specifications) credits one additional
+        year of service for lump sum purposes for retirements on or after February 1, 2030.
+        This is not a standard IRS rule. The right column above shows what your benefit would be
+        under that provision. Verify this provision applies to your plan year before relying on it.
+
+        **Rule-of-85 Provision**
+
+        The Rule-of-85 (penalty-free early retirement when age + service ≥ 85) is an **optional
+        provision** that each NTCA member employer must elect in their Adoption Agreement
+        (Definition 33, NTCA R&S Specifications). Check your Summary Plan Description or contact
+        HR to confirm whether your employer has elected it before setting your retirement date.
+
         **Discount Offset Logic**
 
-        NTCA allows retirees to select the exact date they begin receiving payments.  
+        NTCA allows retirees to select the exact date they begin receiving payments.
         This model reflects that by adjusting the timing of each payment in the present value stream.
 
         **How It Works:**
